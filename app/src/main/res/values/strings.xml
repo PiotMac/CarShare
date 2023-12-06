@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">CarSharingApp</string>
+    <string name="registrationTitle">Register</string>
+    <string name="loginTitle">Login</string>
+    <string name="firstname">Firstname</string>
+    <string name="surname">Surname</string>
+    <string name="password">Password</string>
+    <string name="email">Email</string>
+    <string name="phone_no">Phone number</string>
 </resources>
