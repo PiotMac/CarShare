@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import com.example.carsharingapp.login.login
 import com.example.carsharingapp.register.register
@@ -41,8 +42,18 @@ class MainActivity : AppCompatActivity() {
         if (result.resultCode == Activity.RESULT_OK) {
             // There are no request codes
             val data: Intent? = result.data
-            val sampleMSG = data?.getStringExtra("message")
+            val sampleMSG = data?.getStringExtra("result")
             Log.e("counter", sampleMSG.toString())
+            val result = sampleMSG.toString()
+            if(result == "LOGGED_IN") {
+                val name = data?.getStringExtra("name").toString()
+                Toast.makeText(this, "Welcome, $name", Toast.LENGTH_SHORT).show()
+            } else if (result == "WRONG_PASSWORD"){
+                Toast.makeText(this, "Wrong password", Toast.LENGTH_SHORT).show()
+            } else if (result == "WRONG_EMAIL") {
+                val email = data?.getStringExtra("email").toString()
+                Toast.makeText(this, "User $email doesn't exist", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 

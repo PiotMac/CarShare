@@ -83,8 +83,41 @@ class SQLiteHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
         }
         val count = cursor.count
         cursor.close()
-        Log.e("EMAIL COUNTER", "$count")
         return count >= 1
+    }
+
+    fun checkIfUserExists(password: String, email: String): Boolean {
+        val selectQuery = "SELECT * FROM $TBL_USER WHERE email=\"$email\" AND password=\"$password\" "
+        val db = this.readableDatabase
+        val cursor: Cursor?
+        try {
+            cursor = db.rawQuery(selectQuery, null)
+        }catch (e: Exception){
+            db.execSQL(selectQuery)
+            e.printStackTrace()
+            return false
+        }
+        val count = cursor.count
+        cursor.close()
+        return count >= 1
+    }
+
+    @SuppressLint("Range")
+    fun getUserFirstnameFromEmail(email: String): String {
+        val selectQuery = "SELECT firstname FROM $TBL_USER WHERE email=\"$email\" "
+        val db = this.readableDatabase
+        val cursor: Cursor?
+        try {
+            cursor = db.rawQuery(selectQuery, null)
+        }catch (e: Exception){
+            db.execSQL(selectQuery)
+            e.printStackTrace()
+            return "error"
+        }
+        cursor!!.moveToFirst()
+        val firstname = cursor.getString(cursor.getColumnIndex("firstname"))
+        cursor.close()
+        return firstname
     }
 
     @SuppressLint("Range")
