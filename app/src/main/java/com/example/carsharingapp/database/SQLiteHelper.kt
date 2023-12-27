@@ -6,13 +6,14 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.graphics.ColorSpace.Model
 import android.util.Log
 import java.lang.Exception
 
 class SQLiteHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     companion object {
-        private const val DATABASE_VERSION = 3
-        private const val DATABASE_NAME = "user.db"
+        private const val DATABASE_VERSION = 4
+        private const val DATABASE_NAME = "car-share.db"
         private const val TBL_USER = "tbl_user"
         private const val ID = "id"
         private const val FIRSTNAME = "firstname"
@@ -20,6 +21,11 @@ class SQLiteHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
         private const val PASSWORD = "password"
         private const val EMAIL = "email"
         private const val PHONE = "phone"
+        private const val TBL_CARS = "tbl_car"
+        private const val MAKE = "make"
+        private const val MODEL = "model"
+        private const val PRODUCTION_YEAR = "productionYear"
+        private const val GEARBOX_TYPE = "gearboxType"
     }
 
     override fun onCreate(db: SQLiteDatabase?) {
@@ -27,7 +33,13 @@ class SQLiteHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
                 + ID + " TEXT PRIMARY KEY," + FIRSTNAME + " TEXT," +
                 SURNAME + " TEXT," + PASSWORD + " TEXT," + EMAIL + " TEXT,"
                 + PHONE + " TEXT" + ")")
+
+        val createTblCar = ("CREATE TABLE " + TBL_CARS + "("
+                + ID + " TEXT PRIMARY KEY," + MAKE + " TEXT," +
+                MODEL + " TEXT," + PRODUCTION_YEAR + " TEXT," +
+                GEARBOX_TYPE + " TEXT" + ")")
         db?.execSQL(createTblUser)
+        db?.execSQL(createTblCar)
         Log.i("DATABSE", "CREATED OR UPDATED DATABASE")
     }
 
@@ -35,6 +47,8 @@ class SQLiteHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
         db!!.execSQL("DROP TABLE IF EXISTS $TBL_USER")
         onCreate(db)
     }
+
+    //-------------------------------USER SECTION--------------------------------------------------------
 
     //returns -1 if failed and 0 if worked
     fun insertUser(std: UserModel): Long {
@@ -176,5 +190,21 @@ class SQLiteHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
         for (user in allUsers) {
             Log.i("UŻYTKOWNIK", "${user.id} ${user.email} ${user.firstname} ${user.surname} ${user.phone}")
         }
+    }
+
+    //-------------------------------CAR SECTION--------------------------------------------------------
+    //returns -1 if failed and 0 if worked
+    fun insertCar(std: CarModel): Long {
+        val db = this.writableDatabase
+        val contentValues = ContentValues()
+        contentValues.put(ID, std.id)
+        contentValues.put(MAKE, std.make)
+        contentValues.put(MODEL, std.model)
+        contentValues.put(PRODUCTION_YEAR, std.productionYear)
+        contentValues.put(GEARBOX_TYPE, std.gearboxType.name)
+
+        val success = db.insert(TBL_CARS, null, contentValues)
+        db.close()
+        return success
     }
 }

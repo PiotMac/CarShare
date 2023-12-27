@@ -9,7 +9,10 @@ import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import com.example.carsharingapp.database.CarModel
 import com.example.carsharingapp.database.SQLiteHelper
+import com.example.carsharingapp.database.Transmission
+import com.example.carsharingapp.database.UserModel
 import com.example.carsharingapp.login.login
 import com.example.carsharingapp.register.register
 
@@ -29,7 +32,17 @@ class MainActivity : AppCompatActivity() {
         goToRegisterButton.setOnClickListener { goToRegister() }
         goToLoginButton.setOnClickListener { goToLogin() }
         printAllUsers.setOnClickListener { SQLiteHelper(this).printAllUser() }
-    }
+
+        /*
+        SAMPLE FUNCTION ADDING NEW CAR:
+            val car = CarModel(make = "Audi", model = "A3", productionYear = 2013, gearboxType = Transmission.MANUAL)
+            SQLiteHelper(this).insertCar(car)
+
+        for more detailed sample check out 'addUser' function inside 'register.kt'
+         */
+
+
+        }
 
     private fun goToRegister() {
         val intent = Intent(this, register::class.java)
