@@ -32,10 +32,13 @@ class register : AppCompatActivity() {
         testButton.setOnClickListener { listUser() }
     }
 
+    //Prints how much users are registered
     private fun listUser() {
         val userList = sqliteHelper.getAllUser()
         Log.e("counter", "${userList.size}")
     }
+
+    //Adds new user to database, create toast when there is any error with user data
     private fun addUser() {
         val firstname = editFirstname.text.toString()
         val surname = editSurname.text.toString()
@@ -70,11 +73,14 @@ class register : AppCompatActivity() {
         }
     }
 
+    //Checks if email fits in pattern [letters,numbers]@[letters].[letters]
+    //returns true / false
     fun isEmailValid(email: String): Boolean {
         val emailPattern = Pattern.compile("[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+")
         return emailPattern.matcher(email).matches()
     }
 
+    //Clears input fields
     private fun clearEditText() {
         editFirstname.setText("")
         editSurname.setText("")

@@ -25,6 +25,13 @@ class login : AppCompatActivity() {
         loginButton.setOnClickListener { login() }
     }
 
+    /*
+    Tries to login user, returns two values:
+    'result':
+        'LOGGED_IN' - everything worked fine, second value is 'name'
+        'WRONG_PASSWORD'
+        'WRONG_EMAIL' - email not in database, second value is 'email'
+     */
     private fun login() {
         val intent = Intent(this, MainActivity::class.java)
         if(sqliteHelper.isEmailAlreadyUsed(editEmail.text.toString())) {

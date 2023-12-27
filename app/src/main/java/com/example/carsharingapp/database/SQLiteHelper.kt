@@ -21,8 +21,8 @@ class SQLiteHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
         private const val EMAIL = "email"
         private const val PHONE = "phone"
     }
+
     override fun onCreate(db: SQLiteDatabase?) {
-        //TODO("Not yet implemented")
         val createTblUser = ("CREATE TABLE " + TBL_USER + "("
                 + ID + " INTEGER PRIMARY KEY," + FIRSTNAME + " TEXT," +
                 SURNAME + " TEXT," + PASSWORD + " TEXT," + EMAIL + " TEXT,"
@@ -35,6 +35,7 @@ class SQLiteHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
         onCreate(db)
     }
 
+    //returns -1 if failed and 0 if worked
     fun insertUser(std: UserModel): Long {
        val db = this.writableDatabase
        val contentValues = ContentValues()
@@ -50,6 +51,8 @@ class SQLiteHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
        return success
     }
 
+    //returns true if phone in database, false if not
+    //parameter: phone number as a string
     @SuppressLint("Recycle")
     fun isPhoneAlreadyUsed(newPhone: String): Boolean {
         val selectQuery = "SELECT * FROM $TBL_USER WHERE phone=\"$newPhone\" "
@@ -70,6 +73,8 @@ class SQLiteHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
         return count >= 1
     }
 
+    //return true if email in database, false if not
+    //parameter: email as a string
     fun isEmailAlreadyUsed(newEmail: String): Boolean {
         val selectQuery = "SELECT * FROM $TBL_USER WHERE email=\"$newEmail\" "
         val db = this.readableDatabase
@@ -86,6 +91,8 @@ class SQLiteHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
         return count >= 1
     }
 
+    //check if user with given password and user exists
+    //returns true or false
     fun checkIfUserExists(password: String, email: String): Boolean {
         val selectQuery = "SELECT * FROM $TBL_USER WHERE email=\"$email\" AND password=\"$password\" "
         val db = this.readableDatabase
@@ -102,6 +109,9 @@ class SQLiteHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
         return count >= 1
     }
 
+    //parameter: user email
+    //output: user firstname
+    //if user with given email not found returns "error"
     @SuppressLint("Range")
     fun getUserFirstnameFromEmail(email: String): String {
         val selectQuery = "SELECT firstname FROM $TBL_USER WHERE email=\"$email\" "
@@ -120,6 +130,7 @@ class SQLiteHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
         return firstname
     }
 
+    // returns all users in database as list
     @SuppressLint("Range")
     fun getAllUser(): ArrayList<UserModel> {
         val userList: ArrayList<UserModel> = ArrayList()

@@ -11,6 +11,7 @@ class UserModel(
     var phone: String = ""
 ){
     companion object{
+        //@TODO switch id's from random number to n+1 where n is number of user already registered
         fun getAutoId():Int{
             val random = Random()
             return random.nextInt(100)
