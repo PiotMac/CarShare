@@ -31,4 +31,11 @@
         app:layout_constraintStart_toEndOf="@+id/goToRegisterButton"
         tools:layout_editor_absoluteY="611dp" />
 
+    <Button
+        android:id="@+id/printAllUsers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="PRINT ALL USERS"
+        app:layout_constraintStart_toEndOf="@+id/goToLoginButton"
+        tools:layout_editor_absoluteY="611dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

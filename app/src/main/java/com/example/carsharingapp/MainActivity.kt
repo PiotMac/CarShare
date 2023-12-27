@@ -9,12 +9,14 @@ import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import com.example.carsharingapp.database.SQLiteHelper
 import com.example.carsharingapp.login.login
 import com.example.carsharingapp.register.register
 
 class MainActivity : AppCompatActivity() {
     private lateinit var goToRegisterButton: Button
     private lateinit var goToLoginButton: Button
+    private lateinit var printAllUsers: Button
     val getContent = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         // Handle the returned Uri
     }
@@ -26,6 +28,7 @@ class MainActivity : AppCompatActivity() {
 
         goToRegisterButton.setOnClickListener { goToRegister() }
         goToLoginButton.setOnClickListener { goToLogin() }
+        printAllUsers.setOnClickListener { SQLiteHelper(this).printAllUser() }
     }
 
     private fun goToRegister() {
@@ -60,5 +63,6 @@ class MainActivity : AppCompatActivity() {
     private fun initView() {
         goToRegisterButton = findViewById(R.id.goToRegisterButton)
         goToLoginButton = findViewById(R.id.goToLoginButton)
+        printAllUsers = findViewById(R.id.printAllUsers)
     }
 }

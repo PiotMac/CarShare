@@ -11,7 +11,7 @@ import java.lang.Exception
 
 class SQLiteHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     companion object {
-        private const val DATABASE_VERSION = 1
+        private const val DATABASE_VERSION = 3
         private const val DATABASE_NAME = "user.db"
         private const val TBL_USER = "tbl_user"
         private const val ID = "id"
@@ -24,10 +24,11 @@ class SQLiteHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
 
     override fun onCreate(db: SQLiteDatabase?) {
         val createTblUser = ("CREATE TABLE " + TBL_USER + "("
-                + ID + " INTEGER PRIMARY KEY," + FIRSTNAME + " TEXT," +
+                + ID + " TEXT PRIMARY KEY," + FIRSTNAME + " TEXT," +
                 SURNAME + " TEXT," + PASSWORD + " TEXT," + EMAIL + " TEXT,"
                 + PHONE + " TEXT" + ")")
         db?.execSQL(createTblUser)
+        Log.i("DATABSE", "CREATED OR UPDATED DATABASE")
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
@@ -147,7 +148,7 @@ class SQLiteHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
             return ArrayList()
         }
 
-        var id: Int
+        var id: String
         var firstname: String
         var surname: String
         var email: String
@@ -155,7 +156,7 @@ class SQLiteHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
 
         if (cursor.moveToFirst()) {
             do {
-                id = cursor.getInt(cursor.getColumnIndex("id"))
+                id = cursor.getString(cursor.getColumnIndex("id"))
                 firstname = cursor.getString(cursor.getColumnIndex("firstname"))
                 surname = cursor.getString(cursor.getColumnIndex("surname"))
                 email = cursor.getString(cursor.getColumnIndex("email"))
@@ -168,5 +169,12 @@ class SQLiteHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
 
         cursor.close()
         return userList
+    }
+
+    fun printAllUser() {
+        val allUsers = getAllUser()
+        for (user in allUsers) {
+            Log.i("UŻYTKOWNIK", "${user.id} ${user.email} ${user.firstname} ${user.surname} ${user.phone}")
+        }
     }
 }
