@@ -112,8 +112,8 @@ class SQLiteHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
 
     //check if user with given password and user exists
     //returns true or false
-    fun checkIfUserExists(password: String, email: String): Boolean {
-        val selectQuery = "SELECT * FROM $TBL_USER WHERE email=\"$email\" AND password=\"$password\" "
+    fun checkIfUserExists(password: String, phone: String): Boolean {
+        val selectQuery = "SELECT * FROM $TBL_USER WHERE phone=\"$phone\" AND password=\"$password\" "
         val db = this.readableDatabase
         val cursor: Cursor?
         try {
@@ -132,8 +132,8 @@ class SQLiteHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
     //output: user firstname
     //if user with given email not found returns "error"
     @SuppressLint("Range")
-    fun getUserFirstnameFromEmail(email: String): String {
-        val selectQuery = "SELECT firstname FROM $TBL_USER WHERE email=\"$email\" "
+    fun getUserFirstnameFromPhone(phone: String): String {
+        val selectQuery = "SELECT firstname FROM $TBL_USER WHERE phone=\"$phone\" "
         val db = this.readableDatabase
         val cursor: Cursor?
         try {
