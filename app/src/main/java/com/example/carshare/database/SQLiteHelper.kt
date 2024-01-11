@@ -198,7 +198,7 @@ class SQLiteHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
 
     //-------------------------------CAR SECTION--------------------------------------------------------
     //returns -1 if failed and 0 if worked
-    /*fun insertCar(std: CarModel): Long {
+    fun insertCar(std: CarModel): Long {
         val db = this.writableDatabase
         val contentValues = ContentValues()
         contentValues.put(ID, std.id)
@@ -210,5 +210,5 @@ class SQLiteHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
         val success = db.insert(TBL_CARS, null, contentValues)
         db.close()
         return success
-    }*/
+    }
 }
