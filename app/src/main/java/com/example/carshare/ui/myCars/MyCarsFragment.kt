@@ -6,13 +6,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.carshare.AddCarActivity
-import com.example.carshare.CarInfoActivity
-import com.example.carshare.Cars
+import com.example.carshare.MainActivity
 import com.example.carshare.R
+import com.example.carshare.database.CarModel
+import com.example.carshare.database.SQLiteHelper
 
 import com.example.carshare.databinding.FragmentMyCarsBinding
 
@@ -20,12 +20,13 @@ class MyCarsFragment : Fragment() {
 
     private lateinit var adapter: MyCarsAdapter
     private lateinit var recyclerView: RecyclerView
-    private lateinit var carsArrayList: ArrayList<Cars>
+    private lateinit var carsArrayList: ArrayList<CarModel>
+    private lateinit var sqliteHelper: SQLiteHelper
 
     lateinit var car_name : Array<String>
     lateinit var car_class : Array<String>
     lateinit var car_gearbox : Array<String>
-    lateinit var car_fuel : Array<String>
+    lateinit var car_fuel : Array<Int>
     lateinit var car_address : Array<String>
     lateinit var car_rating : Array<Double>
     lateinit var car_cost : Array<Double>
@@ -48,8 +49,10 @@ class MyCarsFragment : Fragment() {
 
         // Устанавливаем слушателя нажатия для кнопки
         addCarButton.setOnClickListener {
+            val userPhone = (activity as? MainActivity)?.userPhone
             // Создаем объект Intent для запуска новой активити
             val intent = Intent(activity, AddCarActivity::class.java)
+            intent.putExtra("phone", userPhone)
 
             // Запускаем новую активити
             activity?.startActivity(intent)
@@ -62,10 +65,12 @@ class MyCarsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        sqliteHelper = context?.let { SQLiteHelper(it) }!!
 
         dataInitialize()
 
         val layoutManager = LinearLayoutManager(context)
+
         recyclerView = view.findViewById(R.id.myCarsRecycler)
         recyclerView.layoutManager = layoutManager
         recyclerView.setHasFixedSize(true)
@@ -74,15 +79,16 @@ class MyCarsFragment : Fragment() {
         adapter.setOnItemClickListener(object : MyCarsAdapter.onItemClickListtner{
             override fun onItemClick(position: Int) {
                 val intent = Intent(activity, AddCarActivity::class.java)
-                intent.putExtra("car_name", carsArrayList.get(position).car_name)
-                intent.putExtra("car_class", carsArrayList.get(position).car_class)
-                intent.putExtra("car_gearbox", carsArrayList.get(position).car_gearbox)
-                intent.putExtra("car_fuel", carsArrayList.get(position).car_fuel)
-                intent.putExtra("car_address", carsArrayList.get(position).car_address)
-                intent.putExtra("car_rating", carsArrayList.get(position).car_rating)
-                intent.putExtra("car_cost", carsArrayList.get(position).car_cost)
-                intent.putExtra("car_passengers", carsArrayList.get(position).car_passengers)
-                intent.putExtra("car_bags", carsArrayList.get(position).car_bags)
+                intent.putExtra("car_name", carsArrayList.get(position).make
+                        + " " + carsArrayList.get(position).model + " (" + carsArrayList.get(position).productionYear + ")")
+                intent.putExtra("car_class", carsArrayList.get(position).type)
+                intent.putExtra("car_gearbox", carsArrayList.get(position).gearboxType)
+                intent.putExtra("car_fuel", carsArrayList.get(position).amountOfFuelInKm)
+                intent.putExtra("car_address", carsArrayList.get(position).location)
+                intent.putExtra("car_rating", carsArrayList.get(position).rating)
+                intent.putExtra("car_cost", carsArrayList.get(position).price)
+                intent.putExtra("car_passengers", carsArrayList.get(position).numberOfSeats)
+                intent.putExtra("car_bags", carsArrayList.get(position).spaceForBaggage)
 
                 activity?.startActivity(intent)
             }
@@ -95,9 +101,11 @@ class MyCarsFragment : Fragment() {
     }
 
     private fun dataInitialize(){
+        val userPhone = (activity as? MainActivity)?.userPhone
 
-        carsArrayList = arrayListOf<Cars>()
+        carsArrayList = sqliteHelper.getUserCarsFromPhone(userPhone)
 
+        /*
         car_name = arrayOf(
             "Ford Focus",
             "Nisan Leaf",
@@ -113,13 +121,13 @@ class MyCarsFragment : Fragment() {
         car_gearbox = arrayOf(
             "Mechanical",
             "Automatic",
-            "Mechanical"
+            "Double-Clutch"
         )
 
         car_fuel = arrayOf(
-            "Full/Full",
-            "Full/Full",
-            "Empty/Empty"
+            100,
+            235,
+            340
         )
 
         car_address = arrayOf(
@@ -152,10 +160,14 @@ class MyCarsFragment : Fragment() {
             2
         )
 
+
+
         for (i in car_name.indices){
-            val cars = Cars(car_name[i],car_class[i],car_gearbox[i],car_fuel[i],car_address[i],car_rating[i],car_cost[i],car_passengers[i],car_bags[i])
+            val cars = CarModel(car_name[i],car_class[i],car_gearbox[i],car_fuel[i],car_address[i],car_rating[i],car_cost[i],car_passengers[i],car_bags[i])
             carsArrayList.add(cars)
         }
+
+         */
     }
 
 }

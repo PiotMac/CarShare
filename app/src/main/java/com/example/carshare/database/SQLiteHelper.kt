@@ -13,7 +13,7 @@ import java.lang.Exception
 class SQLiteHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     companion object {
         private const val DATABASE_VERSION = 4
-        private const val DATABASE_NAME = "car-share.db"
+        private const val DATABASE_NAME = "car-share-updated1.db"
         private const val TBL_USER = "tbl_user"
         private const val ID = "id"
         private const val FIRSTNAME = "firstname"
@@ -26,8 +26,17 @@ class SQLiteHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
         private const val TBL_CARS = "tbl_car"
         private const val MAKE = "make"
         private const val MODEL = "model"
+        private const val TYPE = "type"
+        private const val NO_OF_SEATS = "seats"
+        private const val NO_OF_BAGGAGE = "baggage"
         private const val PRODUCTION_YEAR = "productionYear"
         private const val GEARBOX_TYPE = "gearboxType"
+        private const val FUEL = "fuel"
+        private const val DESCRIPTION = "description"
+        private const val PRICE = "price"
+        private const val LOCATION = "location"
+        private const val OWNER = "owner"
+        private const val RATING = "rating"
     }
 
     override fun onCreate(db: SQLiteDatabase?) {
@@ -38,11 +47,14 @@ class SQLiteHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
 
         val createTblCar = ("CREATE TABLE " + TBL_CARS + "("
                 + ID + " TEXT PRIMARY KEY," + MAKE + " TEXT," +
-                MODEL + " TEXT," + PRODUCTION_YEAR + " TEXT," +
-                GEARBOX_TYPE + " TEXT" + ")")
+                MODEL + " TEXT," + TYPE + " TEXT," + NO_OF_SEATS + " TEXT,"
+                + NO_OF_BAGGAGE + " TEXT," + PRODUCTION_YEAR + " TEXT," +
+                GEARBOX_TYPE + " TEXT," + FUEL + " TEXT," + DESCRIPTION + " TEXT,"
+                + PRICE + " TEXT," + LOCATION + " TEXT," + OWNER + " TEXT,"
+                + RATING + " TEXT" + ")")
         db?.execSQL(createTblUser)
         db?.execSQL(createTblCar)
-        Log.i("DATABSE", "CREATED OR UPDATED DATABASE")
+        Log.i("DATABASE", "CREATED OR UPDATED DATABASE")
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
@@ -204,11 +216,138 @@ class SQLiteHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
         contentValues.put(ID, std.id)
         contentValues.put(MAKE, std.make)
         contentValues.put(MODEL, std.model)
+        contentValues.put(TYPE, std.type)
+        contentValues.put(NO_OF_SEATS, std.numberOfSeats)
+        contentValues.put(NO_OF_BAGGAGE, std.spaceForBaggage)
         contentValues.put(PRODUCTION_YEAR, std.productionYear)
-        contentValues.put(GEARBOX_TYPE, std.gearboxType.name)
+        contentValues.put(GEARBOX_TYPE, std.gearboxType)
+        contentValues.put(FUEL, std.amountOfFuelInKm)
+        contentValues.put(DESCRIPTION, std.description)
+        contentValues.put(PRICE, std.price)
+        contentValues.put(LOCATION, std.location)
+        contentValues.put(OWNER, std.owner)
+        contentValues.put(RATING, std.rating)
 
         val success = db.insert(TBL_CARS, null, contentValues)
         db.close()
         return success
+    }
+
+    @SuppressLint("Range")
+    fun getAllCars() : ArrayList<CarModel> {
+        val carList: ArrayList<CarModel> = ArrayList()
+        val selectQuery = "SELECT * FROM $TBL_CARS"
+        val db = this.readableDatabase
+
+        val cursor: Cursor?
+
+        try {
+            cursor = db.rawQuery(selectQuery, null)
+        }catch (e: Exception){
+            db.execSQL(selectQuery)
+            e.printStackTrace()
+            return ArrayList()
+        }
+
+        var id: String
+        var make: String
+        var model: String
+        var type: String
+        var numberOfSeats: Int
+        var spaceForBaggage: Int
+        var productionYear: Int
+        var gearBoxType: String
+        var amountOfFuel : Int
+        var description : String
+        var price : Double
+        var location : String
+        var owner : String
+        var rating : Double
+
+        if (cursor.moveToFirst()) {
+            do {
+                id = cursor.getString(cursor.getColumnIndex("id"))
+                make = cursor.getString(cursor.getColumnIndex("make"))
+                model = cursor.getString(cursor.getColumnIndex("model"))
+                type = cursor.getString(cursor.getColumnIndex("type"))
+                numberOfSeats = cursor.getString(cursor.getColumnIndex("seats")).toInt()
+                spaceForBaggage = cursor.getString(cursor.getColumnIndex("baggage")).toInt()
+                productionYear = cursor.getString(cursor.getColumnIndex("productionYear")).toInt()
+                gearBoxType = cursor.getString(cursor.getColumnIndex("gearboxType"))
+                amountOfFuel = cursor.getString(cursor.getColumnIndex("fuel")).toInt()
+                description = cursor.getString(cursor.getColumnIndex("description"))
+                price = cursor.getString(cursor.getColumnIndex("price")).toDouble()
+                location = cursor.getString(cursor.getColumnIndex("location"))
+                owner = cursor.getString(cursor.getColumnIndex("owner"))
+                rating = cursor.getString(cursor.getColumnIndex("rating")).toDouble()
+
+                val car = CarModel(id, make, model, type, numberOfSeats, spaceForBaggage,
+                                   productionYear, gearBoxType, amountOfFuel, description,
+                                   price, location, owner, rating)
+                carList.add(car)
+            } while(cursor.moveToNext())
+        }
+
+        cursor.close()
+        return carList
+    }
+
+    @SuppressLint("Range")
+    fun getUserCarsFromPhone(phone : String?) : ArrayList<CarModel> {
+        val carList: ArrayList<CarModel> = ArrayList()
+        val selectQuery = "SELECT * FROM $TBL_CARS WHERE owner=\"$phone\" "
+        val db = this.readableDatabase
+
+        val cursor: Cursor?
+
+        try {
+            cursor = db.rawQuery(selectQuery, null)
+        }catch (e: Exception){
+            db.execSQL(selectQuery)
+            e.printStackTrace()
+            return ArrayList()
+        }
+
+        var id: String
+        var make: String
+        var model: String
+        var type: String
+        var numberOfSeats: Int
+        var spaceForBaggage: Int
+        var productionYear: Int
+        var gearBoxType: String
+        var amountOfFuel : Int
+        var description : String
+        var price : Double
+        var location : String
+        var owner : String
+        var rating : Double
+
+        if (cursor.moveToFirst()) {
+            do {
+                id = cursor.getString(cursor.getColumnIndex("id"))
+                make = cursor.getString(cursor.getColumnIndex("make"))
+                model = cursor.getString(cursor.getColumnIndex("model"))
+                type = cursor.getString(cursor.getColumnIndex("type"))
+                numberOfSeats = cursor.getString(cursor.getColumnIndex("seats")).toInt()
+                spaceForBaggage = cursor.getString(cursor.getColumnIndex("baggage")).toInt()
+                productionYear = cursor.getString(cursor.getColumnIndex("productionYear")).toInt()
+                gearBoxType = cursor.getString(cursor.getColumnIndex("gearboxType"))
+                amountOfFuel = cursor.getString(cursor.getColumnIndex("fuel")).toInt()
+                description = cursor.getString(cursor.getColumnIndex("description"))
+                price = cursor.getString(cursor.getColumnIndex("price")).toDouble()
+                location = cursor.getString(cursor.getColumnIndex("location"))
+                owner = cursor.getString(cursor.getColumnIndex("owner"))
+                rating = cursor.getString(cursor.getColumnIndex("rating")).toDouble()
+
+                val car = CarModel(id, make, model, type, numberOfSeats, spaceForBaggage,
+                    productionYear, gearBoxType, amountOfFuel, description,
+                    price, location, owner, rating)
+                carList.add(car)
+            } while(cursor.moveToNext())
+        }
+
+        cursor.close()
+        return carList
     }
 }

@@ -16,6 +16,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var sqliteHelper: SQLiteHelper
     private lateinit var editPassword: EditText
     private lateinit var editPhone: EditText
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -38,6 +39,7 @@ class LoginActivity : AppCompatActivity() {
                 val name = sqliteHelper.getUserFirstnameFromPhone(editPhone.text.toString())
                 intent.putExtra("result", "LOGGED_IN")
                 intent.putExtra("name", sqliteHelper.getUserFirstnameFromPhone(editPhone.text.toString()))
+                intent.putExtra("phone", editPhone.text.toString())
                 Toast.makeText(this, "Welcome, $name", Toast.LENGTH_SHORT).show()
                 startActivity(intent)
             } else {

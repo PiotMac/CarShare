@@ -11,15 +11,32 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="32dp"
         android:background="@drawable/edit_rounded"
         android:ems="10"
-        android:hint="Car Name"
+        android:hint="@string/make"
         android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/editTextCarModel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/edit_rounded"
+        android:ems="10"
+        android:hint="@string/model"
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextCarName" />
 
     <Spinner
         android:id="@+id/spinnerCarClass"
@@ -34,10 +51,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextCarName" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextCarModel" />
 
     <EditText
-        android:id="@+id/editTextNumberOfPersons"
+        android:id="@+id/editTextNumberOfPeople"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
@@ -45,7 +62,7 @@
         android:layout_marginEnd="32dp"
         android:background="@drawable/edit_rounded"
         android:ems="10"
-        android:hint="Number of Persons"
+        android:hint="@string/number_of_people"
         android:inputType="number"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -61,12 +78,28 @@
         android:layout_marginEnd="32dp"
         android:background="@drawable/edit_rounded"
         android:ems="10"
-        android:hint="Number of Bags"
+        android:hint="@string/number_of_bags"
         android:inputType="number"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextNumberOfPersons" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextNumberOfPeople" />
+
+    <EditText
+        android:id="@+id/editTextProductionYear"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/edit_rounded"
+        android:ems="10"
+        android:hint="@string/year_of_production"
+        android:inputType="number"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextNumberOfBags" />
 
     <Spinner
         android:id="@+id/spinnerCarGearbox"
@@ -81,8 +114,24 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextNumberOfBags" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextProductionYear" />
 
+    <EditText
+        android:id="@+id/editTextFuelRange"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/edit_rounded"
+        android:ems="10"
+        android:hint="@string/current_fuel_range_in_km"
+        android:inputType="number"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinnerCarGearbox" />
+<!--
     <Spinner
         android:id="@+id/spinnerCarFuelTank"
         android:layout_width="0dp"
@@ -97,22 +146,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spinnerCarGearbox" />
-
-    <EditText
-        android:id="@+id/editTextCarAddress"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="32dp"
-        android:background="@drawable/edit_rounded"
-        android:ems="10"
-        android:hint="Car Address"
-        android:inputType="text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinnerCarFuelTank" />
+    -->
 
     <EditText
         android:id="@+id/editTextCarDescription"
@@ -128,7 +162,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextCarAddress" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextFuelRange" />
 
     <EditText
         android:id="@+id/editTextCarPrice"
@@ -146,6 +180,22 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextCarDescription" />
 
+    <EditText
+        android:id="@+id/editTextCarAddress"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/edit_rounded"
+        android:ems="10"
+        android:hint="Car Address"
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextCarPrice" />
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/ButtonLoadImages"
         android:layout_width="0dp"
@@ -160,7 +210,7 @@
         app:cornerRadius="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextCarPrice" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextCarAddress" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/buttonAdd"
@@ -170,6 +220,7 @@
         android:layout_marginEnd="32dp"
         android:layout_marginBottom="16dp"
         android:text="Continue"
+        android:onClick="onContinueClick"
         android:textColor="@color/black"
         android:textSize="16sp"
         app:backgroundTint="@color/purple_500"

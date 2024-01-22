@@ -21,7 +21,13 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
-    
+    <string name="model">Model</string>
+    <string name="make">Make</string>
+    <string name="year_of_production">Year of production</string>
+    <string name="number_of_bags">Number of Bags</string>
+    <string name="number_of_people">Number of People</string>
+    <string name="current_fuel_range_in_km">Current fuel range (in km)</string>
+
     <array name="carClass">
         <item>Mini (A)</item>
         <item>Small (B)</item>
@@ -35,9 +41,9 @@
     </array>
 
     <array name="carGearbox">
-        <item>Mechanical</item>
+        <item>Manual</item>
         <item>Automatic</item>
-        <item>Robotic</item>
+        <item>Dual-Clutch</item>
         <item>Variable (stepless)</item>
     </array>
 
