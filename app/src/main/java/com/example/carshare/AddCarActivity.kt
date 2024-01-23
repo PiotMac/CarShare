@@ -16,46 +16,49 @@ class AddCarActivity : AppCompatActivity() {
         setContentView(R.layout.activity_add_car)
         sqliteHelper = SQLiteHelper(this)
 
-        if (intent.getSerializableExtra("car_name")==null){
+        if (intent.getSerializableExtra("car_make")==null){
 
         }else{
 
-            var car_name : TextView = findViewById(R.id.editTextCarName)
-            car_name.text = intent.getSerializableExtra("car_name").toString()
+            val car_name : TextView = findViewById(R.id.editTextCarName)
+            car_name.text = intent.getSerializableExtra("car_make").toString()
 
-            var car_class : Spinner = findViewById(R.id.spinnerCarClass)
-            car_class.setSelection(resources.getStringArray(R.array.carClass).indexOf(intent.getSerializableExtra("car_class").toString()))
+            val car_model : TextView = findViewById(R.id.editTextCarModel)
+            car_model.text = intent.getSerializableExtra("car_model").toString()
 
-            var car_gearbox : Spinner = findViewById(R.id.spinnerCarGearbox)
+            val car_class : Spinner = findViewById(R.id.spinnerCarClass)
+            car_class.setSelection(resources.getStringArray(R.array.carClass).indexOf(intent.getSerializableExtra("car_type").toString()))
+
+            val car_gearbox : Spinner = findViewById(R.id.spinnerCarGearbox)
             car_gearbox.setSelection(resources.getStringArray(R.array.carGearbox).indexOf(intent.getSerializableExtra("car_gearbox").toString()))
 
-            var car_fuel : TextView = findViewById(R.id.editTextFuelRange)
+            val car_fuel : TextView = findViewById(R.id.editTextFuelRange)
             car_fuel.text = intent.getSerializableExtra("car_fuel").toString()
-            //car_fuel.setSelection(resources.getStringArray(R.array.carFuelTank).indexOf(intent.getSerializableExtra("car_fuel").toString()))
 
-            //var car_fuel : Spinner = findViewById(R.id.spinnerCarFuelTank)
-            //car_fuel.setSelection(resources.getStringArray(R.array.carFuelTank).indexOf(intent.getSerializableExtra("car_fuel").toString()))
-            var car_address : TextView = findViewById(R.id.editTextCarAddress)
+            val car_address : TextView = findViewById(R.id.editTextCarAddress)
             car_address.text = intent.getSerializableExtra("car_address").toString()
 
-            var car_cost : TextView = findViewById(R.id.editTextCarPrice)
-            car_cost.text = intent.getSerializableExtra("car_cost").toString()
-            var car_passengers : TextView = findViewById(R.id.editTextNumberOfPeople)
+            val car_cost : TextView = findViewById(R.id.editTextCarPrice)
+            car_cost.text = intent.getSerializableExtra("car_price").toString()
+            val car_passengers : TextView = findViewById(R.id.editTextNumberOfPeople)
             car_passengers.text = intent.getSerializableExtra("car_passengers").toString()
-            var car_bags : TextView = findViewById(R.id.editTextNumberOfBags)
+            val car_bags : TextView = findViewById(R.id.editTextNumberOfBags)
             car_bags.text =intent.getSerializableExtra("car_bags").toString()
 
-//        var car_rating : TextView = findViewById(R.id.textRating)
-//        car_rating.text = intent.getSerializableExtra("car_rating").toString()
+            val car_production : TextView = findViewById(R.id.editTextProductionYear)
+            car_production.text = intent.getSerializableExtra("car_year").toString()
 
+            val car_description : TextView = findViewById(R.id.editTextCarDescription)
+            car_description.text = intent.getSerializableExtra("car_description").toString()
 
-
-
+            val car_availability : Spinner = findViewById(R.id.spinnerAvailability)
+            car_availability.setSelection(resources.getStringArray(R.array.carAvailability).indexOf(intent.getSerializableExtra("car_availability").toString()))
         }
     }
 
     fun onContinueClick(view: View) {
-        var createdCar : CarModel = CarModel()
+        val createdCar = CarModel()
+
         val carName : TextView = findViewById(R.id.editTextCarName)
         createdCar.make = carName.text.toString()
         val carModel : TextView = findViewById(R.id.editTextCarModel)
@@ -78,9 +81,20 @@ class AddCarActivity : AppCompatActivity() {
         createdCar.price = carPrice.text.toString().toDouble()
         val carAddress : TextView = findViewById(R.id.editTextCarAddress)
         createdCar.location = carAddress.text.toString()
+        val carAvailability : Spinner = findViewById(R.id.spinnerAvailability)
+        createdCar.availability = carAvailability.selectedItem.toString()
 
         createdCar.owner = intent.getStringExtra("phone").toString()
-        sqliteHelper.insertCar(createdCar)
+
+        // Checking if the car is being updated or created
+        if (intent.getSerializableExtra("car_id") == null) {
+            sqliteHelper.insertCar(createdCar)
+        }
+        else {
+            createdCar.id = intent.getSerializableExtra("car_id").toString()
+            sqliteHelper.updateCar(createdCar)
+        }
+
 
         finish()
     }

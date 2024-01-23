@@ -196,21 +196,38 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextCarPrice" />
 
+    <Spinner
+        android:id="@+id/spinnerAvailability"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/edit_rounded"
+        android:entries="@array/carAvailability"
+        android:spinnerMode="dropdown"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextCarAddress" />
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/ButtonLoadImages"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="24dp"
         android:layout_marginEnd="32dp"
         android:text="Load Images"
         android:textColor="@color/black"
         android:textSize="16sp"
         app:backgroundTint="@color/purple_500"
         app:cornerRadius="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/buttonAdd"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextCarAddress" />
+        app:layout_constraintTop_toBottomOf="@+id/spinnerAvailability"
+        app:layout_constraintVertical_bias="0.0" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/buttonAdd"
@@ -218,9 +235,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
-        android:layout_marginBottom="16dp"
-        android:text="Continue"
         android:onClick="onContinueClick"
+        android:text="Continue"
         android:textColor="@color/black"
         android:textSize="16sp"
         app:backgroundTint="@color/purple_500"
@@ -228,6 +244,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ButtonLoadImages" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

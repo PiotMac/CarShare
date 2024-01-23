@@ -54,4 +54,9 @@
         <item>Empty/Full</item>
     </array>
 
+    <array name="carAvailability">
+        <item>Yes</item>
+        <item>No</item>
+    </array>
+
 </resources>

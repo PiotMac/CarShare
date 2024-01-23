@@ -2,7 +2,7 @@ package com.example.carshare.database
 
 import java.util.UUID
 class CarModel(
-    val id: String = UUID.randomUUID().toString(),
+    var id: String = UUID.randomUUID().toString(),
     var make: String = "",
     var model: String = "",
     var type: String = "",
@@ -15,5 +15,6 @@ class CarModel(
     var price: Double = 0.0,
     var location: String = "",
     var owner: String = "",
-    var rating : Double = 0.0
+    var rating : Double = 0.0,
+    var availability : String = ""
 ){}
