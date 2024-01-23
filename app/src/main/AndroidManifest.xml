@@ -19,6 +19,9 @@
             android:name=".CarInfoActivity"
             android:exported="false" />
         <activity
+            android:name=".TransactionInfoActivity"
+            android:exported="false" />
+        <activity
             android:name=".RegistrationActivity"
             android:exported="false" />
         <activity

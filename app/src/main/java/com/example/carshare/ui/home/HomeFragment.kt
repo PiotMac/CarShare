@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.carshare.CarInfoActivity
+import com.example.carshare.MainActivity
 import com.example.carshare.R
 import com.example.carshare.database.CarModel
 import com.example.carshare.database.SQLiteHelper
@@ -74,12 +75,21 @@ class HomeFragment : Fragment() {
                         + " " + carsArrayList.get(position).model + " (" + carsArrayList.get(position).productionYear + ")")
                 intent.putExtra("car_class", carsArrayList.get(position).type)
                 intent.putExtra("car_gearbox", carsArrayList.get(position).gearboxType)
-                intent.putExtra("car_fuel", "${carsArrayList.get(position).amountOfFuelInKm} km")
+                intent.putExtra("car_fuel", "${carsArrayList.get(position).amountOfFuelInKm}")
                 intent.putExtra("car_address", carsArrayList.get(position).location)
                 intent.putExtra("car_rating", carsArrayList.get(position).rating)
                 intent.putExtra("car_cost", carsArrayList.get(position).price)
                 intent.putExtra("car_passengers", carsArrayList.get(position).numberOfSeats)
                 intent.putExtra("car_bags", carsArrayList.get(position).spaceForBaggage)
+                intent.putExtra("car_owner_phone", carsArrayList.get(position).owner)
+                intent.putExtra("car_renter_phone", (activity as? MainActivity)?.userPhone)
+                intent.putExtra("car_id", carsArrayList.get(position).id)
+                intent.putExtra("car_make", carsArrayList.get(position).make)
+                intent.putExtra("car_model", carsArrayList.get(position).model)
+                intent.putExtra("car_production", carsArrayList.get(position).productionYear)
+                intent.putExtra("car_description", carsArrayList.get(position).description)
+                intent.putExtra("car_owner", carsArrayList.get(position).owner)
+                intent.putExtra("car_availability", carsArrayList.get(position).availability)
 
                 activity?.startActivity(intent)
             }
@@ -93,7 +103,7 @@ class HomeFragment : Fragment() {
 
     private fun dataInitialize(){
 
-        carsArrayList = sqliteHelper.getAllCars()
+        carsArrayList = sqliteHelper.getAllAvailableCars()
 
         /*
         car_name = arrayOf(

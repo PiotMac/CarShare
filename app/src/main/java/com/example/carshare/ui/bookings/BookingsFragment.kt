@@ -57,6 +57,7 @@ class BookingsFragment : Fragment() {
         dataInitialize()
 
         val layoutManager = LinearLayoutManager(context)
+        /*
 
         recyclerView = view.findViewById(R.id.bookingCarsRecycler)
         recyclerView.layoutManager = layoutManager
@@ -80,6 +81,8 @@ class BookingsFragment : Fragment() {
                 activity?.startActivity(intent)
             }
         })
+
+         */
     }
 
     override fun onDestroyView() {

@@ -7,6 +7,8 @@ class TransactionModel (
     var carID: String = "",
     var ownerID: String = "",
     var borrowerID: String = "",
-    var price: Double = 0.0,
-    var date : Date? = null
+    var perDayPrice: Double = 0.0,
+    var finalPrice: Double = 0.0,
+    var startDate : Date? = null,
+    var endDate : Date? = null
 ){}

@@ -18,6 +18,33 @@
         android:elevation="3dp">
 
         <TextView
+            android:id="@+id/finalPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:text="+/- 1000 PLN"
+            android:textColor="#000000"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/imageCar"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.105" />
+
+        <TextView
+            android:id="@+id/pricePerDay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:text="(+/- 1000 PLN/day)"
+            android:textColor="#000000"
+            android:textSize="12sp"
+            android:textStyle="bold"
+
+            app:layout_constraintEnd_toStartOf="@+id/imageCar"
+            app:layout_constraintTop_toBottomOf="@+id/finalPrice" />
+
+        <TextView
             android:id="@+id/textNameCar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -29,31 +56,6 @@
             app:layout_constraintBottom_toBottomOf="@+id/imageCar"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/imageCar" />
-
-        <TextView
-            android:id="@+id/textAvailability"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="120dp"
-            android:text="Available:"
-            android:textSize="15sp"
-            android:textColor="#000000"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textClassCar" />
-
-        <TextView
-            android:id="@+id/textYesOrNo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="144dp"
-            android:text="YES/NO"
-            android:textColor="#000000"
-            android:textSize="15sp"
-            app:layout_constraintStart_toEndOf="@+id/textAvailability"
-            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/textClassCar"
@@ -88,10 +90,33 @@
             app:layout_constraintStart_toEndOf="@+id/imageRating"
             app:layout_constraintTop_toTopOf="@+id/imageRating" />
 
+        <TextView
+            android:id="@+id/textDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="4dp"
+            android:text="20-12-2023"
+            android:textColor="#A7A7A7"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textClassCar" />
+
+
+        <TextView
+            android:id="@+id/textEndDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="24dp"
+            android:text="20-12-2023"
+            android:textColor="#A7A7A7"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textDate" />
+
         <ImageView
             android:id="@+id/imageCar"
-            android:layout_width="200dp"
-            android:layout_height="150dp"
+            android:layout_width="158dp"
+            android:layout_height="139dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
@@ -102,6 +127,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0"
             app:srcCompat="@drawable/ford" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

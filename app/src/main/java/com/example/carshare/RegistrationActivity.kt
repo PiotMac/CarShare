@@ -48,7 +48,7 @@ class RegistrationActivity : AppCompatActivity() {
         val email = editEmail.text.toString()
         val phone = editPhone.text.toString()
         val address = editAddress.text.toString()
-        val country = editAddress.text.toString()
+        val country = editCountry.text.toString()
 
         if(firstname.isEmpty() || surname.isEmpty() || password.isEmpty() || email.isEmpty() || phone.isEmpty() || address.isEmpty() || country.isEmpty()) {
             Toast.makeText(this, "Please enter all values", Toast.LENGTH_SHORT).show()

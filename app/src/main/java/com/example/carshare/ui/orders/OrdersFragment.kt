@@ -1,5 +1,6 @@
 package com.example.carshare.ui.orders
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,16 +11,21 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.carshare.AddCarActivity
+import com.example.carshare.MainActivity
 import com.example.carshare.R
+import com.example.carshare.TransactionInfoActivity
 import com.example.carshare.database.CarModel
 import com.example.carshare.database.SQLiteHelper
+import com.example.carshare.database.TransactionModel
 import com.example.carshare.databinding.FragmentOrdersBinding
+import java.text.SimpleDateFormat
 
 class OrdersFragment : Fragment() {
 
     private lateinit var adapter: OrdersAdapter
     private lateinit var recyclerView: RecyclerView
     private lateinit var carsArrayList: ArrayList<CarModel>
+    private lateinit var transactionsArrayList: ArrayList<TransactionModel>
     private lateinit var sqliteHelper: SQLiteHelper
 
     private lateinit var cars_count: TextView
@@ -45,6 +51,7 @@ class OrdersFragment : Fragment() {
         _binding = FragmentOrdersBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
+
         return root
     }
 
@@ -56,14 +63,19 @@ class OrdersFragment : Fragment() {
 
         val layoutManager = LinearLayoutManager(context)
 
+        val userPhone = (activity as? MainActivity)?.userPhone
+        val userID = sqliteHelper.getUserIdFromPhone(userPhone)
+
         recyclerView = view.findViewById(R.id.ordersCarsRecycler)
         recyclerView.layoutManager = layoutManager
         recyclerView.setHasFixedSize(true)
-        adapter = OrdersAdapter(carsArrayList)
+        adapter = OrdersAdapter(carsArrayList, transactionsArrayList, userID)
         recyclerView.adapter = adapter
         adapter.setOnItemClickListener(object : OrdersAdapter.onItemClickListener{
+            @SuppressLint("SimpleDateFormat")
             override fun onItemClick(position: Int) {
-                val intent = Intent(activity, AddCarActivity::class.java)
+                val intent = Intent(activity, TransactionInfoActivity::class.java)
+
                 intent.putExtra("car_name", carsArrayList.get(position).make
                         + " " + carsArrayList.get(position).model + " (" + carsArrayList.get(position).productionYear + ")")
                 intent.putExtra("car_class", carsArrayList.get(position).type)
@@ -74,6 +86,19 @@ class OrdersFragment : Fragment() {
                 intent.putExtra("car_cost", carsArrayList.get(position).price)
                 intent.putExtra("car_passengers", carsArrayList.get(position).numberOfSeats)
                 intent.putExtra("car_bags", carsArrayList.get(position).spaceForBaggage)
+
+                val dateFormat = SimpleDateFormat("dd-MM-yyyy")
+
+                intent.putExtra("transaction_start_date", transactionsArrayList.get(position).startDate?.let { dateFormat.format(it) })
+                intent.putExtra("transaction_end_date", transactionsArrayList.get(position).endDate?.let { dateFormat.format(it) })
+                intent.putExtra("transaction_price_day", transactionsArrayList.get(position).perDayPrice.toString())
+                intent.putExtra("transaction_price", transactionsArrayList.get(position).finalPrice.toString())
+
+                val owner = sqliteHelper.getUserFromId(transactionsArrayList.get(position).ownerID)
+                val renter = sqliteHelper.getUserFromId(transactionsArrayList.get(position).borrowerID)
+
+                intent.putExtra("car_owner", owner.firstname + " " + owner.surname + ", " + owner.phone)
+                intent.putExtra("car_renter", renter.firstname + " " + renter.surname + ", " + renter.phone)
 
                 activity?.startActivity(intent)
             }
@@ -86,8 +111,9 @@ class OrdersFragment : Fragment() {
     }
 
     private fun dataInitialize(){
-        //TODO: Dodac zamowione wczesniej auta
-        carsArrayList = sqliteHelper.getAllCars()
+        val userPhone = (activity as? MainActivity)?.userPhone
+        transactionsArrayList = sqliteHelper.getAllUserTransactions(userPhone)
+        carsArrayList = sqliteHelper.getAllCarsFromTransactions(transactionsArrayList)
         /*
 
         car_name = arrayOf(

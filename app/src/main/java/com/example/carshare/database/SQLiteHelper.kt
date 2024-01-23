@@ -6,7 +6,6 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import android.graphics.ColorSpace.Model
 import android.util.Log
 import java.lang.Exception
 import java.text.SimpleDateFormat
@@ -15,7 +14,7 @@ import java.util.Date
 class SQLiteHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     companion object {
         private const val DATABASE_VERSION = 4
-        private const val DATABASE_NAME = "car-share-updated3.db"
+        private const val DATABASE_NAME = "car-share-updated6.db"
         private const val TBL_USER = "tbl_user"
         private const val ID = "id"
         private const val FIRSTNAME = "firstname"
@@ -45,7 +44,9 @@ class SQLiteHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
         private const val TBL_TRANSACTIONS = "tbl_transaction"
         private const val CAR_ID = "car_id"
         private const val BORROWER_ID = "borrower_id"
-        private const val DATE = "date"
+        private const val PRICE_PER_DAY = "price_day"
+        private const val START_DATE = "start_date"
+        private const val END_DATE = "end_date"
     }
 
     override fun onCreate(db: SQLiteDatabase?) {
@@ -64,7 +65,8 @@ class SQLiteHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
 
         val createTblTransaction = ("CREATE TABLE " + TBL_TRANSACTIONS + "("
                 + ID + " TEXT PRIMARY KEY," + CAR_ID + " TEXT," + OWNER + " TEXT,"
-                + BORROWER_ID + " TEXT," + PRICE + " TEXT," + DATE + " TEXT" + ")")
+                + BORROWER_ID + " TEXT," + PRICE + " TEXT," + PRICE_PER_DAY + " TEXT,"
+                + START_DATE + " TEXT," + END_DATE + " TEXT" + ")")
 
         db?.execSQL(createTblUser)
         db?.execSQL(createTblCar)
@@ -176,6 +178,47 @@ class SQLiteHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
         return firstname
     }
 
+    @SuppressLint("Range")
+    fun getUserIdFromPhone(phone: String?): String {
+        val selectQuery = "SELECT id FROM $TBL_USER WHERE phone=\"$phone\" "
+        val db = this.readableDatabase
+        val cursor: Cursor?
+        try {
+            cursor = db.rawQuery(selectQuery, null)
+        }catch (e: Exception){
+            db.execSQL(selectQuery)
+            e.printStackTrace()
+            return "error"
+        }
+        cursor!!.moveToFirst()
+        val id = cursor.getString(cursor.getColumnIndex("id"))
+        cursor.close()
+        return id
+    }
+
+    @SuppressLint("Range")
+    fun getUserFromId(userID : String): UserModel {
+        val user : UserModel
+        val selectQuery = "SELECT * FROM $TBL_USER WHERE id=\"$userID\" "
+
+        val db = this.readableDatabase
+        val cursor: Cursor? = db.rawQuery(selectQuery, null)
+
+        cursor!!.moveToFirst()
+        val firstname = cursor.getString(cursor.getColumnIndex("firstname"))
+        val surname = cursor.getString(cursor.getColumnIndex("surname"))
+        val password = cursor.getString(cursor.getColumnIndex("password"))
+        val email = cursor.getString(cursor.getColumnIndex("email"))
+        val phone = cursor.getString(cursor.getColumnIndex("phone"))
+        val country = cursor.getString(cursor.getColumnIndex("country"))
+        val address = cursor.getString(cursor.getColumnIndex("address"))
+        cursor.close()
+
+        user = UserModel(userID, firstname, surname, password, email, phone, country, address)
+
+        return user
+    }
+
     // returns all users in database as list
     @SuppressLint("Range")
     fun getAllUser(): ArrayList<UserModel> {
@@ -266,10 +309,8 @@ class SQLiteHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
         contentValues.put(PRICE, updatedCar.price)
         contentValues.put(LOCATION, updatedCar.location)
         contentValues.put(AVAILABILITY, updatedCar.availability)
-        Log.i("rows_affected", updatedCar.id)
 
         val rows_affected = db.update(TBL_CARS, contentValues, "id=?", arrayOf(updatedCar.id))
-        Log.i("rows_affected", rows_affected.toString())
 
         db.close()
         return rows_affected
@@ -309,70 +350,37 @@ class SQLiteHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
     }
 
     @SuppressLint("Range")
+    fun getAllAvailableCars() : ArrayList<CarModel> {
+        val selectQuery = "SELECT * FROM $TBL_CARS WHERE $AVAILABILITY='Yes'"
+        return getMultipleCarsWithQuery(selectQuery)
+    }
+
+    @SuppressLint("Range")
     fun getAllCars() : ArrayList<CarModel> {
-        val carList: ArrayList<CarModel> = ArrayList()
         val selectQuery = "SELECT * FROM $TBL_CARS"
-        val db = this.readableDatabase
-
-        val cursor: Cursor?
-
-        try {
-            cursor = db.rawQuery(selectQuery, null)
-        }catch (e: Exception){
-            db.execSQL(selectQuery)
-            e.printStackTrace()
-            return ArrayList()
-        }
-
-        var id: String
-        var make: String
-        var model: String
-        var type: String
-        var numberOfSeats: Int
-        var spaceForBaggage: Int
-        var productionYear: Int
-        var gearBoxType: String
-        var amountOfFuel : Int
-        var description : String
-        var price : Double
-        var location : String
-        var owner : String
-        var rating : Double
-        var availability : String
-
-        if (cursor.moveToFirst()) {
-            do {
-                id = cursor.getString(cursor.getColumnIndex("id"))
-                make = cursor.getString(cursor.getColumnIndex("make"))
-                model = cursor.getString(cursor.getColumnIndex("model"))
-                type = cursor.getString(cursor.getColumnIndex("type"))
-                numberOfSeats = cursor.getString(cursor.getColumnIndex("seats")).toInt()
-                spaceForBaggage = cursor.getString(cursor.getColumnIndex("baggage")).toInt()
-                productionYear = cursor.getString(cursor.getColumnIndex("productionYear")).toInt()
-                gearBoxType = cursor.getString(cursor.getColumnIndex("gearboxType"))
-                amountOfFuel = cursor.getString(cursor.getColumnIndex("fuel")).toInt()
-                description = cursor.getString(cursor.getColumnIndex("description"))
-                price = cursor.getString(cursor.getColumnIndex("price")).toDouble()
-                location = cursor.getString(cursor.getColumnIndex("location"))
-                owner = cursor.getString(cursor.getColumnIndex("owner"))
-                rating = cursor.getString(cursor.getColumnIndex("rating")).toDouble()
-                availability = cursor.getString(cursor.getColumnIndex("availability"))
-
-                val car = CarModel(id, make, model, type, numberOfSeats, spaceForBaggage,
-                                   productionYear, gearBoxType, amountOfFuel, description,
-                                   price, location, owner, rating, availability)
-                carList.add(car)
-            } while(cursor.moveToNext())
-        }
-
-        cursor.close()
-        return carList
+        return getMultipleCarsWithQuery(selectQuery)
     }
 
     @SuppressLint("Range")
     fun getUserCarsFromPhone(phone : String?) : ArrayList<CarModel> {
-        val carList: ArrayList<CarModel> = ArrayList()
         val selectQuery = "SELECT * FROM $TBL_CARS WHERE owner=\"$phone\" "
+        return getMultipleCarsWithQuery(selectQuery)
+    }
+
+    @SuppressLint("Range")
+    fun getAllCarsFromTransactions(transactions : ArrayList<TransactionModel>) : ArrayList<CarModel> {
+        val carList: ArrayList<CarModel> = ArrayList()
+
+        for (transaction in transactions) {
+            carList.add(getCarById(transaction.carID))
+        }
+
+        return carList
+    }
+
+    @SuppressLint("Range")
+    fun getMultipleCarsWithQuery(selectQuery : String) : ArrayList<CarModel> {
+        val carList: ArrayList<CarModel> = ArrayList()
         val db = this.readableDatabase
 
         val cursor: Cursor?
@@ -431,11 +439,35 @@ class SQLiteHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
     }
 
     //-------------------------------TRANSACTIONS SECTION--------------------------------------------------------
+    @SuppressLint("Range", "SimpleDateFormat")
+    fun insertTransaction(transaction : TransactionModel) : Long {
+        val db = this.writableDatabase
+        val contentValues = ContentValues()
+        contentValues.put(ID, transaction.id)
+        contentValues.put(CAR_ID, transaction.carID)
+        contentValues.put(OWNER, transaction.ownerID)
+        contentValues.put(BORROWER_ID, transaction.borrowerID)
+        contentValues.put(PRICE, transaction.finalPrice)
+        contentValues.put(PRICE_PER_DAY, transaction.perDayPrice)
+
+        val dateFormat = SimpleDateFormat("dd-MM-yyyy")
+        contentValues.put(START_DATE, transaction.startDate?.let { dateFormat.format(it) })
+        contentValues.put(END_DATE, transaction.endDate?.let { dateFormat.format(it) })
+
+        val success = db.insert(TBL_TRANSACTIONS, null, contentValues)
+        db.close()
+        return success
+    }
+
+
 
     @SuppressLint("Range")
-    fun getAllUserTransactions(userID : String) : ArrayList<TransactionModel> {
+    fun getAllUserTransactions(phone : String?) : ArrayList<TransactionModel> {
         val transactionList: ArrayList<TransactionModel> = ArrayList()
-        val selectQuery = "SELECT * FROM $TBL_TRANSACTIONS WHERE owner=\"$userID\" "
+        val userId = getUserIdFromPhone(phone)
+
+        // Get all transaction that the user was involved in
+        val selectQuery = "SELECT * FROM $TBL_TRANSACTIONS WHERE owner=\"$userId\" OR borrower_id=\"$userId\""
         val db = this.readableDatabase
 
         val cursor: Cursor?
@@ -453,8 +485,10 @@ class SQLiteHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
         var ownerID : String
         var borrowerID : String
         var price : Double
-        var date : Date?
-        val dateFormat = SimpleDateFormat("dd-MM-yyyy HH:mm:ss")
+        var pricePerDay : Double
+        var start_date : Date?
+        var end_date : Date?
+        val dateFormat = SimpleDateFormat("dd-MM-yyyy")
 
         if (cursor.moveToFirst()) {
             do {
@@ -463,9 +497,11 @@ class SQLiteHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
                 ownerID = cursor.getString(cursor.getColumnIndex("owner"))
                 borrowerID = cursor.getString(cursor.getColumnIndex("borrower_id"))
                 price = cursor.getString(cursor.getColumnIndex("price")).toDouble()
-                date = dateFormat.parse(cursor.getString(cursor.getColumnIndex("date")))
+                pricePerDay = cursor.getString(cursor.getColumnIndex("price_day")).toDouble()
+                start_date = dateFormat.parse(cursor.getString(cursor.getColumnIndex("start_date")))
+                end_date = dateFormat.parse(cursor.getString(cursor.getColumnIndex("end_date")))
 
-                val transaction = TransactionModel(id, carID, ownerID, borrowerID, price, date)
+                val transaction = TransactionModel(id, carID, ownerID, borrowerID, pricePerDay, price, start_date, end_date)
                 transactionList.add(transaction)
             } while(cursor.moveToNext())
         }
