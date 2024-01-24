@@ -13,7 +13,7 @@ import java.util.Date
 
 class SQLiteHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     companion object {
-        private const val DATABASE_VERSION = 4
+        private const val DATABASE_VERSION = 6
         private const val DATABASE_NAME = "car-share-updated6.db"
         private const val TBL_USER = "tbl_user"
         private const val ID = "id"
@@ -76,6 +76,8 @@ class SQLiteHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
         db!!.execSQL("DROP TABLE IF EXISTS $TBL_USER")
+        db!!.execSQL("DROP TABLE IF EXISTS $TBL_CARS")
+        db!!.execSQL("DROP TABLE IF EXISTS $TBL_TRANSACTIONS")
         onCreate(db)
     }
 

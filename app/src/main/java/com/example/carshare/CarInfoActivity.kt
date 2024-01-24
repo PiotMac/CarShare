@@ -42,6 +42,9 @@ class CarInfoActivity : AppCompatActivity() {
         car_passengers.text = "x" + intent.getSerializableExtra("car_passengers").toString()
         var car_bags : TextView = findViewById(R.id.textNumberOfBags)
         car_bags.text = "x" + intent.getSerializableExtra("car_bags").toString()
+        var car_description : TextView = findViewById(R.id.textCarDescription)
+        car_description.text = intent.getSerializableExtra("car_description").toString()
+
 
         carModel.id = intent.getSerializableExtra("car_id").toString()
         carModel.make = intent.getSerializableExtra("car_make").toString()
